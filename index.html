@@ -282,6 +282,8 @@ footer .up i{width:8px;height:8px;border-radius:50%;background:var(--ok);animati
 .pod.starting{border-style:dashed;color:var(--warn);border-color:rgba(251,191,36,.6)}
 .pod.term{opacity:.2;transform:scale(.88)}
 .k8s .st{font-family:var(--mono);font-size:12px;margin-top:10px;color:var(--muted)}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);opacity:0;z-index:150;padding:12px 18px;border-radius:12px;background:rgba(10,15,28,.95);border:1px solid var(--c1);color:#fff;font-size:14px;transition:.3s;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
 <body>
@@ -552,9 +554,9 @@ footer .up i{width:8px;height:8px;border-radius:50%;background:var(--ok);animati
       <h2>Let's ship something <span class="gt">reliable</span>.</h2>
       <p class="sub" style="margin:0 auto">Open to DevOps, Cloud and SRE roles — on-site, hybrid or remote. I usually reply within a day.</p>
       <div class="cbtns">
-        <a class="cb mail" href="mailto:sujitgangarde202@gmail.com">✉ sujitgangarde202@gmail.com</a>
-        <a class="cb wa" href="https://wa.me/919067006986" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="cb" href="tel:+919067006986">☎ Call</a>
+        <a class="cb mail" href="mailto:sujitgangarde202@gmail.com" data-copy="sujitgangarde202@gmail.com">✉ sujitgangarde202@gmail.com</a>
+        <a class="cb wa" href="https://wa.me/919067006986?text=Hi%20Sujit%2C%20I%20saw%20your%20portfolio" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="cb" href="tel:+919067006986" data-copy="+91 90670 06986">☎ Call +91 90670 06986</a>
         <a class="cb" href="https://www.linkedin.com/in/sujit-gangarde-96a385341/" target="_blank" rel="noopener">LinkedIn</a>
         <a class="cb" href="https://github.com/sujit-gangarde-devops" target="_blank" rel="noopener">GitHub</a>
       </div>
@@ -567,6 +569,7 @@ footer .up i{width:8px;height:8px;border-radius:50%;background:var(--ok);animati
   <span class="up"><i></i>all systems operational · <span id="clock"></span> IST</span>
 </div></footer>
 <button id="top" aria-label="Back to top">↑</button>
+<div id="toast"></div>
 
 <script>
 const $=s=>document.querySelector(s), sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -721,6 +724,13 @@ const Z=ms=>new Promise(r=>setTimeout(r,ms));
   [...pods.children].forEach(p=>p.className="pod v1");stt.textContent="replicas 3/3 ready · RollingUpdate (maxSurge 1, maxUnavailable 0)";}})();
 })();
 
+// contact: desktop has no phone app, so copy number / email
+(()=>{const t=document.getElementById("toast");let tm;const toast=m=>{t.textContent=m;t.classList.add("show");clearTimeout(tm);tm=setTimeout(()=>t.classList.remove("show"),2600)};
+ const touch=matchMedia("(pointer:coarse)").matches;
+ const copy=v=>navigator.clipboard?navigator.clipboard.writeText(v).catch(()=>{}):Promise.resolve();
+ document.querySelectorAll("a[data-copy]").forEach(a=>a.addEventListener("click",e=>{const v=a.dataset.copy;
+  if(a.href.startsWith("tel:")){ if(!touch){e.preventDefault();copy(v);toast("📋 Number copied: "+v+" — call or WhatsApp anytime");} }
+  else { copy(v); toast("✉ Opening email… (address copied: "+v+")"); }}));})();
 // boot screen
 (async()=>{const b=document.getElementById("boot"),l=document.getElementById("bootlog");let seen=false;try{seen=!!sessionStorage.getItem("booted")}catch(e){}if(seen){b.remove();return}
  const steps=["$ ssh sujit@portfolio","[ ok ] pulling image sujit/portfolio:latest","[ ok ] trivy scan · 0 CRITICAL","[ ok ] kubectl rollout · 3/3 ready","[ ok ] welcome 👋"];
